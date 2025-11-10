@@ -1,18 +1,21 @@
-import express from "express";
+const express = require("express");
 const router = express.Router();
-import {
+
+const {
   registerUser,
   authUser,
   logoutUser,
   getUserProfile,
   updateUserProfile,
-} from "../controllers/userController.js";
-import {
+} = require("../controllers/userController.js");
+
+const {
   logWaterIntake,
   updateWaterIntake,
   getUserWaterIntake,
-} from "../controllers/userWaterIntakeController.js";
-import { protect } from "../middleware/authMiddleware.js";
+} = require("../controllers/userWaterIntakeController.js");
+
+const { protect } = require("../middleware/authMiddleware.js");
 
 router.post("/", registerUser);
 router.post("/auth", authUser);
@@ -30,4 +33,4 @@ router
 
 router.route("/water-intake/:date").get(protect, getUserWaterIntake);
 
-export default router;
+module.exports = router;
