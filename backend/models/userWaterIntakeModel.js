@@ -1,22 +1,21 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const userWaterIntakeSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: "User",
+    required: true,
   },
   date: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   litersDrank: {
     type: Number,
-    required: true
-  }
+    required: true,
+  },
 });
 
-const UserWaterIntake = mongoose.model('UserWaterIntake', userWaterIntakeSchema);
+const UserWaterIntake = mongoose.model("UserWaterIntake", userWaterIntakeSchema);
 
-export default UserWaterIntake;
-
+module.exports = UserWaterIntake;
