@@ -1,5 +1,5 @@
-import asyncHandler from "express-async-handler";
-import UserMealPlan from "../models/UserMealPlanModel.js";
+const asyncHandler = require("express-async-handler");
+const UserMealPlan = require("../models/UserMealPlanModel.js");
 
 // @desc      Create user meal plan
 // @route     POST /api/user/meal-plan
@@ -54,7 +54,6 @@ const updateUserMealPlan = asyncHandler(async (req, res) => {
   let userMealPlan = await UserMealPlan.findOne({ userId, date });
 
   if (!userMealPlan) {
-    // If user meal plan doesn't exist, create a new one
     userMealPlan = await UserMealPlan.create({
       userId,
       date,
@@ -67,7 +66,6 @@ const updateUserMealPlan = asyncHandler(async (req, res) => {
     });
     res.status(201).json(userMealPlan);
   } else {
-    // If user meal plan exists, update it
     userMealPlan.meal1 = meal1 || userMealPlan.meal1;
     userMealPlan.meal2 = meal2 || userMealPlan.meal2;
     userMealPlan.meal3 = meal3 || userMealPlan.meal3;
@@ -80,4 +78,8 @@ const updateUserMealPlan = asyncHandler(async (req, res) => {
   }
 });
 
-export { createUserMealPlan, getUserMealPlan, updateUserMealPlan };
+module.exports = {
+  createUserMealPlan,
+  getUserMealPlan,
+  updateUserMealPlan,
+};
