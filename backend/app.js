@@ -1,45 +1,40 @@
-import path from "path";
-import express from "express";
-import dotenv from "dotenv";
-dotenv.config();
-import cookieParser from "cookie-parser";
-import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
-import connectDB from "./config/db.js";
-const port = process.env.PORT || 5123;
-import userRoutes from "./routes/userRoutes.js";
-import userStatusRoutes from "./routes/userStatusRoutes.js";
-import UserMealPlanRoutes from "./routes/UserMealPlanRoutes.js";
+const path = require("path");
+const express = require("express");
+const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
+const { notFound, errorHandler } = require("./middleware/errorMiddleware.js");
+const connectDB = require("./config/db.js");
+const userRoutes = require("./routes/userRoutes.js");
+const userStatusRoutes = require("./routes/userStatusRoutes.js");
+const UserMealPlanRoutes = require("./routes/UserMealPlanRoutes.js");
 
+// Load environment variables
+dotenv.config();
+
+// Connect to MongoDB
 connectDB();
 
 const app = express();
+const port = process.env.PORT || 5123;
 
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(cookieParser());
 
+// API routes
 app.use("/api/users", userRoutes);
 app.use("/api/user", userStatusRoutes);
 app.use("/api/user", UserMealPlanRoutes);
 
-if (process.env.NODE_ENV === "production") {
-    import { fileURLToPath } from "url";
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
+// Default route
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
 
-    app.use(express.static(path.join(__dirname, "frontend/build")));
-  
-    app.get("*", (req, res) =>
-      res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
-    );
-  } else {
-    app.get("/", (req, res) => res.send("Server is ready"));
-  }
-
+// Error handlers
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(port, () => console.log(`Server started on port ${port}`));
-
-export default app;
+// Start server
+app.listen(port, () => console.log(`✅ Server started on port ${port}`));
