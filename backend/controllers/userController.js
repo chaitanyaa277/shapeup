@@ -1,10 +1,10 @@
-import asyncHandler from "express-async-handler";
-import generateToken from "../utils/generateToken.js";
-import User from "../models/userModel.js";
+const asyncHandler = require("express-async-handler");
+const generateToken = require("../utils/generateToken.js");
+const User = require("../models/userModel.js");
 
-// @desc        Auth user/set token
-// route        POST /api/users/auth
-// @access      Public
+// @desc    Auth user/set token
+// @route   POST /api/users/auth
+// @access  Public
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -23,9 +23,9 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc        Register a new user
-// route        POST /api/users
-// @access      Public
+// @desc    Register a new user
+// @route   POST /api/users
+// @access  Public
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -36,11 +36,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("User already exists");
   }
 
-  const user = await User.create({
-    name,
-    email,
-    password,
-  });
+  const user = await User.create({ name, email, password });
 
   if (user) {
     generateToken(res, user._id);
@@ -55,9 +51,9 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc        Logout a new user
-// route        POST /api/users/logout
-// @access      Public
+// @desc    Logout user
+// @route   POST /api/users/logout
+// @access  Public
 const logoutUser = asyncHandler(async (req, res) => {
   res.cookie("jwt", "", {
     httpOnly: true,
@@ -67,9 +63,9 @@ const logoutUser = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "user logged out" });
 });
 
-// @desc        Get user profile
-// route        GET /api/users/profile
-// @access      Private
+// @desc    Get user profile
+// @route   GET /api/users/profile
+// @access  Private
 const getUserProfile = asyncHandler(async (req, res) => {
   const user = {
     _id: req.user._id,
@@ -80,9 +76,9 @@ const getUserProfile = asyncHandler(async (req, res) => {
   res.status(200).json(user);
 });
 
-// @desc        Update user profile
-// @route       PUT /api/users/profile
-// @access      Private
+// @desc    Update user profile
+// @route   PUT /api/users/profile
+// @access  Private
 const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
@@ -103,11 +99,11 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(404);
-    throw new Error('User Not Found');
+    throw new Error("User Not Found");
   }
 });
 
-export {
+module.exports = {
   authUser,
   registerUser,
   logoutUser,
