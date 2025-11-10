@@ -1,32 +1,20 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
-const statusSchema = mongoose.Schema({
+const statusSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
-  height: {
-    type: Number,
-    required: true,
-  },
-  weight: {
-    type: Number,
-    required: true,
-  },
-  goalWeight: {
-    type: Number,
-    required: true,
-  },
-  age: {
-    type: Number,
-    required: true,
-  },
+  height: { type: Number, required: true },
+  weight: { type: Number, required: true },
+  goalWeight: { type: Number, required: true },
+  age: { type: Number, required: true },
   gender: {
     type: String,
     validate: {
       validator: function (value) {
-        return /^(male|female)$/i.test(value); // case-insensitive validation
+        return /^(male|female)$/i.test(value);
       },
       message: "Gender must be either 'Male' or 'Female'.",
     },
@@ -46,4 +34,4 @@ const statusSchema = mongoose.Schema({
 
 const Status = mongoose.model("Status", statusSchema);
 
-export default Status;
+module.exports = Status;
