@@ -1,9 +1,9 @@
-import asyncHandler from "express-async-handler";
-import Status from "../models/userStatusModel.js";
+const asyncHandler = require("express-async-handler");
+const Status = require("../models/userStatusModel.js");
 
-// @desc      Create user status
-// @route     POST /api/user/status
-// @access    Private
+// @desc    Create user status
+// @route   POST /api/user/status
+// @access  Private
 const createUserStatus = asyncHandler(async (req, res) => {
   const {
     height,
@@ -37,12 +37,11 @@ const createUserStatus = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc      Get user status
-// @route     GET /api/user/status
-// @access    Private
+// @desc    Get user status
+// @route   GET /api/user/status
+// @access  Private
 const getUserStatus = asyncHandler(async (req, res) => {
   const user = req.user._id;
-
   const status = await Status.findOne({ user });
 
   if (status) {
@@ -53,9 +52,9 @@ const getUserStatus = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc      Update user status
-// @route     PUT /api/user/status
-// @access    Private
+// @desc    Update user status
+// @route   PUT /api/user/status
+// @access  Private
 const updateUserStatus = asyncHandler(async (req, res) => {
   const {
     height,
@@ -72,7 +71,6 @@ const updateUserStatus = asyncHandler(async (req, res) => {
   let status = await Status.findOne({ user });
 
   if (!status) {
-    // If user status doesn't exist, create a new one
     status = await Status.create({
       user,
       height,
@@ -86,7 +84,6 @@ const updateUserStatus = asyncHandler(async (req, res) => {
     });
     res.status(201).json(status);
   } else {
-    // If user status exists, update it
     status.height = height || status.height;
     status.weight = weight || status.weight;
     status.goalWeight = goalWeight || status.goalWeight;
@@ -101,4 +98,8 @@ const updateUserStatus = asyncHandler(async (req, res) => {
   }
 });
 
-export { createUserStatus, getUserStatus, updateUserStatus };
+module.exports = {
+  createUserStatus,
+  getUserStatus,
+  updateUserStatus,
+};
