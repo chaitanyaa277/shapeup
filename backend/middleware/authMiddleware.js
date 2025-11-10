@@ -1,27 +1,39 @@
-import jwt from "jsonwebtoken";
-import asyncHandler from "express-async-handler";
-import User from "../models/userModel.js";
+const jwt = require("jsonwebtoken");
+const asyncHandler = require("express-async-handler");
+const User = require("../models/userModel.js");
 
+// Protect routes (checks cookie "jwt" first, then Authorization: Bearer)
 const protect = asyncHandler(async (req, res, next) => {
-  let token;
+  let token = null;
 
-  token = req.cookies.jwt;
+  // 1) Try HTTP-only cookie set by generateToken()
+  if (req.cookies && req.cookies.jwt) {
+    token = req.cookies.jwt;
+  }
 
-  if (token) {
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  // 2) Fallback: Authorization header (Bearer <token>)
+  if (!token && req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
+    token = req.headers.authorization.split(" ")[1];
+  }
 
-      req.user = await User.findById(decoded.userId).select("-password");
-
-      next();
-    } catch (error) {
-      res.status(401);
-      throw new Error("Not authorized, invalid token");
-    }
-  } else {
+  if (!token) {
     res.status(401);
     throw new Error("Not authorized, no token");
   }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // Attach user (without password) for downstream handlers
+    req.user = await User.findById(decoded.userId).select("-password");
+    if (!req.user) {
+      res.status(401);
+      throw new Error("Not authorized, user not found");
+    }
+    next();
+  } catch (err) {
+    res.status(401);
+    throw new Error("Not authorized, token failed");
+  }
 });
 
-export { protect };
+module.exports = { protect };
