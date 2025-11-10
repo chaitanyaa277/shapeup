@@ -1,11 +1,13 @@
-import express from "express";
+const express = require("express");
 const router = express.Router();
-import {
+
+const {
   createUserMealPlan,
   getUserMealPlan,
   updateUserMealPlan,
-} from "../controllers/UserMealPlanController.js";
-import { protect } from "../middleware/authMiddleware.js";
+} = require("../controllers/UserMealPlanController.js");
+
+const { protect } = require("../middleware/authMiddleware.js");
 
 router
   .route("/meal-plan")
@@ -14,4 +16,4 @@ router
 
 router.route("/meal-plan/:date").get(protect, getUserMealPlan);
 
-export default router;
+module.exports = router;
