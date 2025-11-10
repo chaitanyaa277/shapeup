@@ -2,12 +2,11 @@
   "name": "shape-up-app",
   "version": "1.0.0",
   "description": "Shape Up App - MongoDB, Expressjs, React/Redux, Nodejs",
-  "type": "module",
+  "type": "commonjs",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "server": "nodemon app.js",
-    "test": "jest"
+    "server": "nodemon app.js"
   },
   "repository": {
     "type": "git",
