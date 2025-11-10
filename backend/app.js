@@ -24,7 +24,10 @@ app.use("/api/user", userStatusRoutes);
 app.use("/api/user", UserMealPlanRoutes);
 
 if (process.env.NODE_ENV === "production") {
-    const __dirname = path.resolve();
+    import { fileURLToPath } from "url";
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+
     app.use(express.static(path.join(__dirname, "frontend/build")));
   
     app.get("*", (req, res) =>
