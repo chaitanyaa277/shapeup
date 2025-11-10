@@ -1,11 +1,13 @@
-import express from "express";
+const express = require("express");
 const router = express.Router();
-import {
+
+const {
   createUserStatus,
   getUserStatus,
   updateUserStatus,
-} from "../controllers/userStatusController.js";
-import { protect } from "../middleware/authMiddleware.js";
+} = require("../controllers/userStatusController.js");
+
+const { protect } = require("../middleware/authMiddleware.js");
 
 router
   .route("/status")
@@ -13,4 +15,4 @@ router
   .get(protect, getUserStatus)
   .put(protect, updateUserStatus);
 
-export default router;
+module.exports = router;
